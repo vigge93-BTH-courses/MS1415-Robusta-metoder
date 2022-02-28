@@ -1,0 +1,19 @@
+gam_mdl = 
+
+
+Generalized linear regression model:
+    reciprocal(y) ~ 1 + x1 + x2
+    Distribution = Gamma
+
+Estimated Coefficients:
+                   Estimate      SE        tStat       pValue   
+                   ________    _______    _______    ___________
+
+    (Intercept)     11.145     0.26547     41.981    1.5748e-237
+    x1             -7.9322     0.27628    -28.711     2.381e-138
+    x2             -8.9953     0.27036    -33.271    2.0896e-172
+
+
+1200 observations, 1197 error degrees of freedom
+Estimated Dispersion: 0.227
+F-statistic vs. constant model: 1.09e+03, p-value = 8.25e-270

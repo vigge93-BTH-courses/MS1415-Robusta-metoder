@@ -1,0 +1,19 @@
+norm_mdl = 
+
+
+Generalized linear regression model:
+    y ~ 1 + x1 + x2
+    Distribution = Normal
+
+Estimated Coefficients:
+                   Estimate       SE        tStat       pValue   
+                   ________    _________    ______    ___________
+
+    (Intercept)    0.089728    0.0064802    13.847     1.6994e-40
+    x1              0.21826    0.0091817    23.771    2.8565e-102
+    x2               0.3249    0.0092905    34.972    3.8447e-184
+
+
+1176 observations, 1173 error degrees of freedom
+Estimated Dispersion: 0.0168
+F-statistic vs. constant model: 640, p-value = 1.3e-188
