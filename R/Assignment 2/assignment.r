@@ -1,43 +1,48 @@
-source(file = "./barma.r")
+library(forecast)
+library(tseries)
 library(stats)
 
+source(file = "./barma.r")
+
 data_set <- scan("./data.txt")
-
-
 size_set <- length(data_set)
 
 #Date to combine with dataset
 x <- seq(as.Date("1990/01/01"), by = "month", length.out = size_set)
 training_date <- x[0:(size_set - 10)]
 validation_date <- x[(size_set - 10): size_set]
-# Example: [1] "2014-09-04" "2014-09-05" "2014-09-06" "2014-09-07" "2014-09-08"
 
 training_set <- data_set[0:(size_set - 10)]
-
 validation_set <- data_set[(size_set - 10):size_set]
 
-plot(training_set, type = 'l', col = 'blue', lwd = 2, xlab = 'Time', ylab = 'Value')
+# Convert to time series object
+training_set <- ts(training_set, start = c(1990, 1), frequency = 12)
+validation_set_ts <- ts(validation_set, start = c(2004, 1), frequency = 12)
 
-# ACF - 15 as parameter 
+plot(training_set, type = "l", col = "blue", lwd = 2, xlab = "Time", ylab = "Value")
+
+adf.test(training_set) # Not stationary
+
+
+# ACF - 12 as parameter
 acf(training_set)
 #PACF - 3 as parameter
 pacf(training_set)
 
-#Gaussian Arma model
-gfit <- glm.fit(training_date, training_set, family = gaussian())
+# ARIMA
+detrended_set <- Arima(training_set, order = c(3, 1, 12))
+checkresiduals(detrended_set)
+plot(forecast(detrended_set))
+lines(validation_set_ts, type="l", col="red")
 
-#Beta arma model 
-barma_model <- barma(ts(training_set, start=c(1990, 1), frequency = 12), ar = c(1,3), ma =c(1,15), h=10, resid=2)
 
-# Getting the residuals
-barma_res = barma_model$resid3
-gfit_res = resid(gfit)
 
+#Beta arma model
+ma_param <- 15
+barma_model <- barma(training_set, ar = 1:3, ma = 1:ma_param, h = 11, diag=1)
+
+plot(validation_set, type = "l", col = "red", lwd = 2, xlab = "Time", ylab = "Value")
+lines(barma_model$forecast, type="l", col="blue", lwd = 2)
 
 # Plotting the residuals
-plot(barma_res, type='h')
-hist(barma_res)
-
-plot(gfit_res, type="l")
-
-# Optimize barma, pretty much lost hope for gaussian since it builds off on the wrong foundation
+checkresiduals(barma_model$resid1)
